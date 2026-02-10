@@ -1,0 +1,18 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
+
+# Mac
+.DS_Store
