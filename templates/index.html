@@ -4,18 +4,110 @@
     <meta charset="UTF-8">
     <title>LofiNotepad</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dark">
 
 <header>
     <h1>LofiNotepad</h1>
 </header>
 
+<!-- Barra de herramientas -->
+<div class="toolbar">
+    <!-- Fuente -->
+    <select onchange="format('fontName', this.value)">
+        <option value="Arial">Arial</option>
+        <option value="Times New Roman">Times New Roman</option>
+        <option value="Courier New">Courier</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Verdana">Verdana</option>
+    </select>
+
+    <!-- Tamaño -->
+    <select onchange="format('fontSize', this.value)">
+        <option value="1">8px</option>
+        <option value="2">10px</option>
+        <option value="3" selected>12px</option>
+        <option value="4">16px</option>
+        <option value="5">20px</option>
+        <option value="6">24px</option>
+        <option value="7">32px</option>
+    </select>
+
+    <!-- Estilos -->
+    <button id="boldBtn" onclick="format('bold')"><b>B</b></button>
+    <button id="italicBtn" onclick="format('italic')"><i>I</i></button>
+    <button id="underlineBtn" onclick="format('underline')"><u>U</u></button>
+
+
+    <!-- Color -->
+    <input type="color" onchange="format('foreColor', this.value)">
+
+    <!-- Títulos -->
+    <select onchange="format('formatBlock', this.value)">
+        <option value="p">Normal</option>
+        <option value="h1">Título 1</option>
+        <option value="h2">Título 2</option>
+        <option value="h3">Título 3</option>
+    </select>
+
+    <!-- Alineación -->
+    <button onclick="format('justifyLeft')">⬅</button>
+    <button onclick="format('justifyCenter')">⬍</button>
+    <button onclick="format('justifyRight')">➡</button>
+
+    <!-- Listas -->
+    <button onclick="format('insertUnorderedList')">• Lista</button>
+    <button onclick="format('insertOrderedList')">1. Lista</button>
+
+    <input type="file" id="imageInput" accept="image/*" hidden>
+    <button onclick="document.getElementById('imageInput').click()">🖼 Imagen</button>
+
+</div>
+
 <main>
-    <div class="page" contenteditable="true">
-        Empieza a escribir aquí...
-    </div>
+    <div class="page" id="editor" contenteditable="true"></div>
 </main>
+
+<script>
+function format(cmd, value = null) {
+    document.execCommand(cmd, false, value);
+}
+
+// Actualizar estado de botones
+function updateToolbar() {
+    toggleActive("bold", "boldBtn");
+    toggleActive("italic", "italicBtn");
+    toggleActive("underline", "underlineBtn");
+}
+
+function toggleActive(command, buttonId) {
+    const btn = document.getElementById(buttonId);
+    if (document.queryCommandState(command)) {
+        btn.classList.add("active");
+    } else {
+        btn.classList.remove("active");
+    }
+}
+
+// Detectar cambios al escribir o seleccionar
+document.addEventListener("selectionchange", updateToolbar);
+
+
+// Insertar imágenes
+document.getElementById("imageInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.execCommand("insertImage", false, e.target.result);
+    };
+    reader.readAsDataURL(file);
+});
+
+</script>
 
 </body>
 </html>
+
