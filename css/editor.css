@@ -175,3 +175,31 @@
 #editor-container::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.3);
 }
+
+/* Responsive Media Queries for Mobile & Tablet Writing Canvas */
+@media (max-width: 768px) {
+    .toolbar {
+        width: 100%;
+        order: 3;
+        padding-top: 6px;
+        border-top: 1px solid var(--panel-border);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        justify-content: flex-start;
+    }
+
+    #editor-container {
+        padding: 12px 8px 60px 8px !important;
+    }
+
+    .page-sheet,
+    .page-sheet.mode-a4,
+    .page-sheet.mode-continuous,
+    .page-sheet.mode-minimal {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 80vh !important;
+        padding: 20px 14px !important;
+        border-radius: 8px !important;
+    }
+}

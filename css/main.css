@@ -218,3 +218,55 @@ body.zen-mode #zen-exit-btn {
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* Responsive Design Breakpoints for Mobile & Tablet */
+@media (max-width: 768px) {
+    header {
+        height: auto;
+        padding: 8px 10px;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .brand-section {
+        gap: 6px;
+    }
+
+    .brand-title {
+        font-size: 0.95rem;
+    }
+
+    .brand-title img {
+        height: 24px !important;
+        width: 24px !important;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
+    .lang-btn {
+        padding: 3px 6px;
+        font-size: 0.72rem;
+    }
+
+    #status-bar {
+        height: auto;
+        padding: 8px 10px;
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+
+    .status-group {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .status-link {
+        font-size: 0.75rem;
+    }
+}

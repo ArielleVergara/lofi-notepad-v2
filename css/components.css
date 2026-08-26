@@ -782,3 +782,75 @@
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* Responsive Components & Modals for Mobile / Tablet */
+@media (max-width: 768px) {
+    /* Overlay Sidebar on Mobile */
+    #sidebar-panel {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 85vw;
+        max-width: 280px;
+        z-index: 50;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.6);
+    }
+
+    #sidebar-panel.collapsed {
+        margin-left: -85vw;
+    }
+
+    /* Centered Popovers on Mobile */
+    #audio-panel,
+    #pomodoro-panel,
+    #outline-panel {
+        position: fixed !important;
+        top: 70px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+        width: 92vw !important;
+        max-width: 340px !important;
+        z-index: 60 !important;
+    }
+
+    /* Responsive Modals */
+    .modal-container,
+    #lore-modal .modal-container {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        max-height: 90vh !important;
+        border-radius: 12px !important;
+    }
+
+    .lore-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .lore-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .lore-cats {
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .preset-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Mobile Post-its */
+    .postit-container {
+        max-width: 88vw !important;
+    }
+
+    /* Tour Popover on Mobile */
+    .tour-popover {
+        width: 92vw !important;
+        left: 4vw !important;
+        transform: none !important;
+    }
+}
