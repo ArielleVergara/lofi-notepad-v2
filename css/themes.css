@@ -1,0 +1,36 @@
+/* CSS Variables for Dynamic Customization */
+:root {
+    /* UI Theme Colors */
+    --primary-accent: #8b5cf6;
+    --primary-accent-hover: #a78bfa;
+    --primary-accent-rgb: 139, 92, 246;
+    --bg-dark: #0f172a;
+    --panel-bg: rgba(30, 41, 59, 0.75);
+    --panel-border: rgba(255, 255, 255, 0.12);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+
+    /* Background Ambient Settings */
+    --bg-image-url: none;
+    --bg-blur: 8px;
+    --bg-overlay-opacity: 0.55;
+
+    /* Sheet / Paper Customization */
+    --sheet-bg: #1e293b;
+    --sheet-text-color: #f1f5f9;
+    --sheet-max-width: 800px;
+    --sheet-padding: 60px 70px;
+    --sheet-font-family: 'Inter', system-ui, sans-serif;
+    --sheet-font-size: 16px;
+    --sheet-line-height: 1.7;
+    --sheet-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --sheet-border-radius: 8px;
+}
+
+body.theme-light {
+    --bg-dark: #f1f5f9;
+    --panel-bg: rgba(255, 255, 255, 0.85);
+    --panel-border: rgba(0, 0, 0, 0.1);
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+}

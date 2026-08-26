@@ -1,0 +1,177 @@
+/* Editor Toolbar & Main Writing Canvas */
+
+/* Formatting Toolbar */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-width: 100%;
+}
+
+.toolbar::-webkit-scrollbar {
+    display: none;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--panel-border);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+.toolbar select,
+.toolbar input[type="color"] {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--panel-border);
+    color: var(--text-main);
+    height: 30px;
+    padding: 0 6px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.toolbar select:hover {
+    border-color: var(--primary-accent);
+}
+
+.toolbar input[type="color"] {
+    width: 30px;
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.toolbar .icon-btn {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+}
+
+/* Editor Scroll Container */
+#editor-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px 80px 20px;
+    scroll-behavior: smooth;
+}
+
+/* Document Paper / Sheet */
+.page-sheet {
+    background: var(--sheet-bg);
+    color: var(--sheet-text-color);
+    max-width: var(--sheet-max-width);
+    width: 100%;
+    min-height: 1000px;
+    padding: var(--sheet-padding);
+    font-family: var(--sheet-font-family);
+    font-size: var(--sheet-font-size);
+    line-height: var(--sheet-line-height);
+    box-shadow: var(--sheet-shadow);
+    border-radius: var(--sheet-border-radius);
+    outline: none;
+    user-select: text;
+    transition: background 0.3s ease, color 0.3s ease, max-width 0.3s ease, padding 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Page Modes */
+.page-sheet.mode-a4 {
+    width: 794px;
+    min-height: 1123px;
+    border: 1px solid var(--panel-border);
+}
+
+.page-sheet.mode-continuous {
+    width: 100%;
+    min-height: 80vh;
+    border-radius: 12px;
+}
+
+.page-sheet.mode-minimal {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 40px 0;
+}
+
+/* Placeholder text when empty */
+.page-sheet:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(148, 163, 184, 0.4);
+    pointer-events: none;
+    display: block;
+}
+
+/* Rich Text Content Formatting */
+.page-sheet h1 {
+    font-size: 2em;
+    margin-bottom: 0.6em;
+    font-weight: 700;
+}
+
+.page-sheet h2 {
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.page-sheet h3 {
+    font-size: 1.25em;
+    margin-top: 0.8em;
+    margin-bottom: 0.4em;
+    font-weight: 600;
+}
+
+.page-sheet p {
+    margin-bottom: 1em;
+}
+
+.page-sheet blockquote {
+    border-left: 4px solid var(--primary-accent);
+    padding-left: 16px;
+    margin: 16px 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.page-sheet ul, .page-sheet ol {
+    margin: 1em 0;
+    padding-left: 28px;
+}
+
+.page-sheet img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 16px auto;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom Scrollbar for Editor */
+#editor-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#editor-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#editor-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+#editor-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
