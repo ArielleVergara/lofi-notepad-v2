@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LofiNotebook - Tu Espacio de Escritura Ambientado</title>
+    
+    <!-- Google Fonts Expanded Collection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Cinzel:wght@600;700&family=Dancing+Script:wght@600&family=Georgia&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;600&family=Open+Sans:wght@400;600&family=Oswald:wght@500&family=Playfair+Display:ital,wght@0,600;1,400&family=Quicksand:wght@500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Dynamic Custom Fonts Injection -->
+    <style id="custom-fonts-style"></style>
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Print Stylesheet for clean PDF Export -->
+    <style media="print">
+        header, #status-bar, #sidebar-panel, .postit-container, #audio-panel, #settings-modal, #pomodoro-panel, #outline-panel, #lore-modal, #zen-exit-btn, #tour-popover, #tour-backdrop {
+            display: none !important;
+        }
+        body { background: white !important; color: black !important; }
+        .bg-layer, .bg-overlay { display: none !important; }
+        #editor-container { padding: 0 !important; }
+        .page-sheet {
+            box-shadow: none !important;
+            border: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            background: white !important;
+            color: black !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Ambient Layers -->
+    <div class="bg-layer" id="bg-layer"></div>
+    <div class="bg-overlay" id="bg-overlay"></div>
+
+    <!-- Exit Zen Mode Button -->
+    <button class="icon-btn" id="zen-exit-btn" data-i18n-title="zenTooltip" title="Salir del Modo Enfoque (Esc)">
+        👁️
+    </button>
+
+    <!-- App Main Container -->
+    <div id="app-container">
+
+        <!-- Top Header & Toolbar -->
+        <header>
+            <div class="brand-section">
+                <button class="icon-btn" id="sidebar-toggle-btn" data-i18n-title="toggleSidebar" title="Mostrar/Ocultar Documentos">
+                    📁
+                </button>
+                <span class="brand-title">
+                    <img src="static/img/logo-arienproceso.jpeg" alt="LofiNotebook Logo" style="height: 28px; width: 28px; object-fit: cover; vertical-align: middle; border-radius: 50%; margin-right: 0px;">
+                    LofiNotebook
+                </span>
+            </div>
+
+            <!-- Editor Formatting Toolbar -->
+            <div class="toolbar">
+                <select id="toolbar-font-name" data-i18n-title="fontTooltip" title="Tipografía" style="max-width: 130px;">
+                    <optgroup label="Sass / Sans-Serif">
+                        <option value="Inter">Inter</option>
+                        <option value="Montserrat">Montserrat</option>
+                        <option value="Quicksand">Quicksand</option>
+                        <option value="Open Sans">Open Sans</option>
+                    </optgroup>
+                    <optgroup label="Serif / Literarias">
+                        <option value="Lora">Lora</option>
+                        <option value="Playfair Display">Playfair Display</option>
+                        <option value="Merriweather">Merriweather</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Cinzel">Cinzel</option>
+                        <option value="IBM Plex Serif">IBM Plex Serif</option>
+                    </optgroup>
+                    <optgroup label="Manuscritas & Especiales">
+                        <option value="Caveat">Caveat (Manuscrita)</option>
+                        <option value="Dancing Script">Dancing Script</option>
+                        <option value="Space Mono">Space Mono (Código)</option>
+                        <option value="Courier New">Courier New</option>
+                    </optgroup>
+                    <optgroup label="Fuentes Personalizadas" id="toolbar-custom-fonts-group">
+                        <!-- Uploaded custom fonts dynamically injected here -->
+                    </optgroup>
+                </select>
+
+                <select id="toolbar-font-size" data-i18n-title="fontSizeTooltip" title="Tamaño de Letra" style="max-width: 75px;">
+                    <option value="1">10px</option>
+                    <option value="2">12px</option>
+                    <option value="3" selected>16px</option>
+                    <option value="4">18px</option>
+                    <option value="5">20px</option>
+                    <option value="6">24px</option>
+                    <option value="7">28px</option>
+                    <option value="8">32px</option>
+                    <option value="9">36px</option>
+                    <option value="10">48px</option>
+                    <option value="11">72px</option>
+                </select>
+
+                <div class="toolbar-divider"></div>
+
+                <button class="icon-btn" id="btn-bold" data-i18n-title="boldTooltip" title="Negrita (Ctrl+B)"><b>B</b></button>
+                <button class="icon-btn" id="btn-italic" data-i18n-title="italicTooltip" title="Cursiva (Ctrl+I)"><i>I</i></button>
+                <button class="icon-btn" id="btn-underline" data-i18n-title="underlineTooltip" title="Subrayado (Ctrl+U)"><u>U</u></button>
+                <button class="icon-btn" id="btn-strike" data-i18n-title="strikeTooltip" title="Tachado"><s>S</s></button>
+                
+                <input type="color" id="toolbar-text-color" value="#f8fafc" data-i18n-title="textColorTooltip" title="Color de Texto">
+
+                <div class="toolbar-divider"></div>
+
+                <select id="toolbar-block-format" data-i18n-title="blockFormatTooltip" title="Estilo de Párrafo" style="max-width: 95px;">
+                    <option value="p">Normal</option>
+                    <option value="h1">Título 1</option>
+                    <option value="h2">Título 2</option>
+                    <option value="h3">Título 3</option>
+                </select>
+
+                <button class="icon-btn" id="btn-align-left" data-i18n-title="alignLeftTooltip" title="Alinear Izquierda">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
+                </button>
+                <button class="icon-btn" id="btn-align-center" data-i18n-title="alignCenterTooltip" title="Alinear Centro">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+                </button>
+                <button class="icon-btn" id="btn-align-right" data-i18n-title="alignRightTooltip" title="Alinear Derecha">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="6" y1="18" x2="21" y2="18"/></svg>
+                </button>
+
+                <button class="icon-btn" id="btn-ul" data-i18n-title="ulTooltip" title="Lista con Viñetas">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg>
+                </button>
+                <button class="icon-btn" id="btn-ol" data-i18n-title="olTooltip" title="Lista Numerada">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h2v4"/><path d="M4 14h3v4H4z"/></svg>
+                </button>
+                <button class="icon-btn" id="btn-quote" data-i18n-title="quoteTooltip" title="Cita">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+                </button>
+            </div>
+
+            <!-- Action Controls (Tight 4px gap for clean aesthetic spacing) -->
+            <div class="brand-section" style="gap: 4px;">
+                <button class="icon-btn" id="lore-toggle-btn" data-i18n-title="loreTooltip" title="Fichas de Personajes y Lore">
+                    👥
+                </button>
+                <button class="icon-btn" id="outline-toggle-btn" data-i18n-title="outlineTooltip" title="Esquema por Capítulos">
+                    📜
+                </button>
+                <button class="icon-btn" id="pomodoro-toggle-btn" data-i18n-title="pomoTooltip" title="Temporizador Pomodoro" style="width: auto; padding: 0 8px;">
+                    ⏱️ <span id="pomo-header-badge" style="font-size:0.68rem; margin-left:3px; font-weight:600;">25:00</span>
+                </button>
+                <button class="icon-btn" id="add-postit-btn" data-i18n-title="postitTooltip" title="Notas Post-it">
+                    📌
+                </button>
+                <button class="icon-btn" id="audio-toggle-btn" data-i18n-title="audioTooltip" title="Sonido Ambiental Lo-Fi">
+                    🎧
+                </button>
+                <button class="icon-btn" id="zen-mode-toggle-btn" data-i18n-title="zenTooltip" title="Modo Enfoque / Zen (Ctrl+Shift+F)">
+                    👁️
+                </button>
+
+                <div class="toolbar-divider" style="margin: 0 2px;"></div>
+
+                <!-- Language Toggle Button (ES / EN) -->
+                <button class="lang-btn" id="lang-toggle-btn" title="Cambiar Idioma">🌐 ES</button>
+
+                <!-- Community Header Shortcuts -->
+                <a href="https://discord.gg/94TXZ9SNwr" target="_blank" class="icon-btn" data-i18n-title="discordTooltip" title="Servidor de Discord (Avisos y Sugerencias)">
+                    <img src="static/img/logo-discord.png" alt="Discord Logo" style="height: 18px; width: auto; vertical-align: middle;">
+                </a>
+
+                <button class="icon-btn" id="open-settings-btn" data-i18n-title="settingsTooltip" title="Personalización y Ajustes">
+                    ⚙️
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <div id="workspace-area">
+
+            <!-- Sidebar Panel -->
+            <aside id="sidebar-panel">
+                <div class="sidebar-header">
+                    <h3 data-i18n="myDocs">Mis Documentos</h3>
+                    <button class="icon-btn" id="new-doc-btn" data-i18n-title="newDocument" title="Crear Nuevo Documento">➕</button>
+                </div>
+                <div class="sidebar-search">
+                    <input type="text" id="sidebar-search-input" data-i18n-placeholder="searchDocs" placeholder="Buscar notas...">
+                </div>
+                <div class="doc-list" id="doc-list">
+                    <!-- Dynamic Document Items -->
+                </div>
+            </aside>
+
+            <!-- Writing Canvas Container -->
+            <main id="editor-container">
+                <div class="page-sheet mode-a4" id="editor" contenteditable="true" spellcheck="true" lang="es" data-placeholder="Comienza a escribir tus pensamientos aquí..."></div>
+            </main>
+
+        </div>
+
+        <!-- Bottom Status Bar -->
+        <footer id="status-bar">
+            <div class="status-group">
+                <span id="save-status" data-i18n="savedStatus">💾 Guardado local</span>
+                <span>•</span>
+                <span><span data-i18n="wordsLabel">Palabras</span>: <strong id="word-count-val">0</strong></span>
+                <span>•</span>
+                <span><span data-i18n="charsLabel">Caracteres</span>: <strong id="char-count-val">0</strong></span>
+            </div>
+
+            <!-- Community & Ko-fi Links Visible at Bottom Bar -->
+            <div class="status-group">
+                <a href="https://discord.gg/94TXZ9SNwr" target="_blank" class="status-link" data-i18n-title="discordTooltip" title="Únete al Discord para noticias y sugerencias">
+                    <img src="static/img/logo-discord.png" alt="Discord Logo" style="height: 14px; width: auto; vertical-align: middle; margin-right: 3px;"> Discord
+                </a>
+                <span>•</span>
+                <a href="mailto:arienproceso@gmail.com" class="status-link" data-i18n-title="emailTooltip" title="Sugerencias y contacto directo">
+                    ✉️ arienproceso@gmail.com
+                </a>
+                <span>•</span>
+                <a href="https://ko-fi.com/arienproceso/tip" target="_blank" class="status-link kofi-link" data-i18n-title="kofiTooltip" title="Apoyar en Ko-fi">
+                    <img src="static/img/ko-fi-logo.jpeg" alt="Ko-fi Logo" style="height: 14px; width: auto; vertical-align: middle; border-radius: 3px; margin-right: 3px;">
+                </a>
+            </div>
+
+            <!-- Single Export Dropdown with Word .doc Option -->
+            <div class="status-group">
+                <div class="export-dropdown-wrapper" style="position:relative;">
+                    <button class="icon-btn export-menu-btn" id="export-dropdown-btn" data-i18n-title="downloadBtn" title="Opciones de Descarga" style="width:auto; padding:0 12px; height:28px; font-size:0.8rem; background:rgba(255,255,255,0.08); border:1px solid var(--panel-border);">
+                        <span data-i18n="downloadBtn">📥 Descargar</span> <span style="font-size:0.65rem; margin-left:4px;">▼</span>
+                    </button>
+                    <div class="export-dropdown-menu" id="export-dropdown-menu">
+                        <button class="dropdown-item" id="export-doc-btn" data-i18n="exportWord">📘 Documento Word (.doc)</button>
+                        <button class="dropdown-item" id="export-txt-btn" data-i18n="exportTxt">📄 Texto plano (.txt)</button>
+                        <button class="dropdown-item" id="export-md-btn" data-i18n="exportMd">📝 Markdown (.md)</button>
+                        <button class="dropdown-item" id="export-html-btn" data-i18n="exportHtml">🌐 Página Web (.html)</button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="export-pdf-btn" data-i18n="exportPdf">🖨️ Documento PDF / Imprimir</button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Wrapper for Floating Post-it Notes -->
+    <div id="postits-wrapper"></div>
+
+    <!-- Audio Ambient Popup Panel -->
+    <div id="audio-panel">
+        <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:12px;">
+            <button id="audio-play-master-btn" data-i18n="playAudio" style="background:var(--primary-accent); border:none; color:white; padding:4px 10px; border-radius:6px; font-size:0.75rem; cursor:pointer; font-weight:600;">
+                ▶ Reproducir Audio
+            </button>
+        </div>
+
+        <div class="audio-item">
+            <div class="audio-item-header">
+                <span data-i18n="rainLabel">🌧️ Lluvia suave</span>
+            </div>
+            <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0">
+        </div>
+
+        <div class="audio-item">
+            <div class="audio-item-header">
+                <span data-i18n="fireLabel">🔥 Chimenea</span>
+            </div>
+            <input type="range" id="vol-fire" min="0" max="1" step="0.05" value="0">
+        </div>
+
+        <div class="audio-item">
+            <div class="audio-item-header">
+                <span data-i18n="wavesLabel">🌊 Olas del mar</span>
+            </div>
+            <input type="range" id="vol-waves" min="0" max="1" step="0.05" value="0">
+        </div>
+
+        <div class="audio-item">
+            <div class="audio-item-header">
+                <span data-i18n="cafeLabel">☕ Ambiente de Café</span>
+            </div>
+            <input type="range" id="vol-cafe" min="0" max="1" step="0.05" value="0">
+        </div>
+    </div>
+
+    <!-- Custom Pomodoro Timer Popover Panel -->
+    <div id="pomodoro-panel">
+        <div class="pomo-custom-input">
+            <span data-i18n="pomoDuration">Duración:</span>
+            <input type="number" id="pomo-custom-mins" min="1" max="180" value="25">
+            <span data-i18n="minutes">minutos</span>
+        </div>
+        <div class="pomo-timer-display" id="pomo-timer-display">25:00</div>
+        <div class="pomo-controls">
+            <button id="pomo-start-btn" data-i18n="start" style="background:var(--primary-accent); color:white;">▶ Iniciar</button>
+            <button id="pomo-reset-btn" data-i18n="reset" style="background:transparent; color:var(--text-muted);">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <!-- Document Outline Popover Panel -->
+    <div id="outline-panel">
+        <div style="font-size:0.88rem; font-weight:600; color:var(--primary-accent); margin-bottom:10px; display:flex; justify-content:space-between;">
+            <span data-i18n="outlineTitle">📜 Esquema por Capítulos</span>
+        </div>
+        <div class="outline-list" id="outline-list">
+            <!-- Dynamic Heading Links -->
+        </div>
+    </div>
+
+    <!-- Character & Lore Bible Modal -->
+    <div class="modal-backdrop" id="lore-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 style="font-size:1.1rem; color:var(--primary-accent);" data-i18n="loreModalTitle">👥 Biblia del Proyecto (Personajes & Lore)</h3>
+                <button class="icon-btn" id="close-lore-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                
+                <!-- Embedded Lore Form Container -->
+                <div class="lore-form-container" id="lore-form-container">
+                    <div class="lore-form-row">
+                        <input type="text" id="lore-input-name" data-i18n-placeholder="namePlaceholder" placeholder="Nombre (ej. Elena Rostova)" style="flex:2;">
+                        <select id="lore-input-type" style="flex:1;">
+                            <option value="personaje" data-i18n="catChars">Personaje</option>
+                            <option value="lugar" data-i18n="catPlaces">Lugar</option>
+                            <option value="lore" data-i18n="catLore">Lore</option>
+                            <option value="objeto" data-i18n="catItems">Objeto</option>
+                        </select>
+                        <input type="text" id="lore-input-icon" value="👤" placeholder="Icono (ej. 👤)" style="width:70px; text-align:center;">
+                    </div>
+                    <textarea id="lore-input-details" data-i18n-placeholder="detailsPlaceholder" placeholder="Escribe los detalles de la ficha (Edad, rasgos, historia, secretos...)"></textarea>
+                    <div style="display:flex; justify-content:flex-end; gap:8px;">
+                        <button id="lore-cancel-form-btn" data-i18n="cancel" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted); padding:6px 12px; border-radius:6px; font-size:0.8rem; cursor:pointer;">Cancelar</button>
+                        <button id="lore-save-form-btn" data-i18n="saveCard" style="background:var(--primary-accent); border:none; color:white; padding:6px 16px; border-radius:6px; font-size:0.8rem; cursor:pointer; font-weight:600;">Guardar Ficha</button>
+                    </div>
+                </div>
+
+                <div class="lore-controls">
+                    <div class="lore-cats">
+                        <button class="lore-cat-btn active" data-type="all" data-i18n="catAll">Todos</button>
+                        <button class="lore-cat-btn" data-type="personaje" data-i18n="catChars">Personajes</button>
+                        <button class="lore-cat-btn" data-type="lugar" data-i18n="catPlaces">Lugares</button>
+                        <button class="lore-cat-btn" data-type="lore" data-i18n="catLore">Lore</button>
+                        <button class="lore-cat-btn" data-type="objeto" data-i18n="catItems">Objetos</button>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="lore-search-input" data-i18n-placeholder="searchLore" placeholder="Buscar ficha..." style="background:rgba(15,23,42,0.6); border:1px solid var(--panel-border); color:white; padding:4px 8px; border-radius:6px; font-size:0.8rem;">
+                        <button id="new-lore-btn" style="background:var(--primary-accent); border:none; color:white; padding:4px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer;" data-i18n-title="newLoreCard" title="Nueva Ficha">➕</button>
+                    </div>
+                </div>
+
+                <div class="lore-grid" id="lore-grid">
+                    <!-- Dynamic Lore Cards -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settings-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <h3 style="font-size:1.1rem; color:var(--primary-accent);" data-i18n="settingsTitle">⚙️ Personalización</h3>
+                    <button id="replay-tour-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted); padding:3px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;" data-i18n="helpTourBtn" title="Ver tutorial paso a paso">❓ Ver Tour de Ayuda</button>
+                </div>
+                <button class="icon-btn" id="close-settings-btn">✕</button>
+            </div>
+
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="tab-bg" data-i18n="tabBg">Ambiente & Fondo</button>
+                <button class="tab-btn" data-tab="tab-sheet" data-i18n="tabSheet">Hoja & Formato</button>
+                <button class="tab-btn" data-tab="tab-theme" data-i18n="tabTheme">Tipografía & Tema</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Tab 1: Background & Ambient -->
+                <div class="tab-content active" id="tab-bg">
+                    <div class="setting-group">
+                        <label data-i18n="uploadBgLabel">Subir Imagen de Fondo Propia (Se guardará automáticamente)</label>
+                        <input type="file" id="custom-bg-input" accept="image/*" style="font-size:0.85rem; color:var(--text-muted);">
+                    </div>
+
+                    <!-- Custom Uploaded Wallpapers Gallery -->
+                    <div class="setting-group">
+                        <label data-i18n="myUploadedBgs">Mis Fondos Subidos</label>
+                        <div class="preset-grid" id="custom-bg-gallery">
+                            <!-- Dynamic User Uploaded Wallpapers -->
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="defaultBgs">Fondos Lo-Fi Predeterminados</label>
+                        <div class="preset-grid">
+                            <div class="preset-card active" data-preset="rainy_night" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=400&q=80');">
+                                <span class="preset-title">Noche Lluviosa</span>
+                            </div>
+                            <div class="preset-card" data-preset="cozy_room" style="background-image:url('https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=400&q=80');">
+                                <span class="preset-title">Habitación Acogedora</span>
+                            </div>
+                            <div class="preset-card" data-preset="starry_sky" style="background-image:url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=400&q=80');">
+                                <span class="preset-title">Cielo Estrellado</span>
+                            </div>
+                            <div class="preset-card" data-preset="pixel_sunset" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80');">
+                                <span class="preset-title">Atardecer</span>
+                            </div>
+                            <div class="preset-card" data-preset="lofi_forest" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=80');">
+                                <span class="preset-title">Bosque Calmo</span>
+                            </div>
+                            <div class="preset-card" data-preset="minimal_dark" style="background:linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);">
+                                <span class="preset-title">Oscuro Minimalista</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="bgBlurLabel">Desenfoque del Fondo (Blur)</label>
+                        <input type="range" id="setting-blur" min="0" max="20" value="6" style="width:100%;">
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="bgOverlayLabel">Filtro de Oscuridad (Overlay Opacity)</label>
+                        <input type="range" id="setting-overlay" min="0" max="90" value="55" style="width:100%;">
+                    </div>
+                </div>
+
+                <!-- Tab 2: Sheet & Format -->
+                <div class="tab-content" id="tab-sheet">
+                    <div class="setting-group">
+                        <label data-i18n="sheetStyleLabel">Estilo de Hoja / Lienzo</label>
+                        <select id="setting-page-mode" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="mode-a4">Página A4 Tradicional (con bordes)</option>
+                            <option value="mode-continuous">Manuscrito Continuo</option>
+                            <option value="mode-minimal">Minimalista Transparente (sin lienzo)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="paperBgLabel">Color de Fondo del Papel</label>
+                        <select id="setting-paper-bg" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="#1e293b">Azul Oscuro Nocturno (#1e293b)</option>
+                            <option value="#0f172a">Negro Profundo (#0f172a)</option>
+                            <option value="#ffffff">Blanco Puro (#ffffff)</option>
+                            <option value="#fef3c7">Pergamino Cálido (#fef3c7)</option>
+                            <option value="transparent">Transparente</option>
+                        </select>
+                    </div>
+
+                    <!-- Native Browser Spellchecker Toggle -->
+                    <div class="setting-group">
+                        <label data-i18n="spellcheckLabel">Corrector Ortográfico del Navegador</label>
+                        <select id="setting-spellcheck" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="true" data-i18n="spellcheckOn">Activado (Resalta faltas ortográficas)</option>
+                            <option value="false" data-i18n="spellcheckOff">Desactivado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Typography & App Theme -->
+                <div class="tab-content" id="tab-theme">
+                    <div class="setting-group">
+                        <label data-i18n="uploadFontLabel">Subir Tipografía Personalizada (.ttf, .otf, .woff, .woff2)</label>
+                        <input type="file" id="custom-font-input" accept=".ttf,.otf,.woff,.woff2" style="font-size:0.85rem; color:var(--text-muted);">
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="defaultFontLabel">Tipografía de Lectura Predeterminada</label>
+                        <select id="setting-font-family" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <optgroup label="Sass / Sans-Serif">
+                                <option value="'Inter', sans-serif">Inter</option>
+                                <option value="'Montserrat', sans-serif">Montserrat</option>
+                                <option value="'Quicksand', sans-serif">Quicksand</option>
+                                <option value="'Open Sans', sans-serif">Open Sans</option>
+                            </optgroup>
+                            <optgroup label="Serif / Literarias">
+                                <option value="'Lora', serif">Lora</option>
+                                <option value="'Playfair Display', serif">Playfair Display</option>
+                                <option value="'Merriweather', serif">Merriweather</option>
+                                <option value="'Georgia', serif">Georgia</option>
+                                <option value="'Cinzel', serif">Cinzel</option>
+                                <option value="'IBM Plex Serif', serif">IBM Plex Serif</option>
+                            </optgroup>
+                            <optgroup label="Manuscritas & Especiales">
+                                <option value="'Caveat', cursive">Caveat (Manuscrita)</option>
+                                <option value="'Dancing Script', cursive">Dancing Script</option>
+                                <option value="'Space Mono', monospace">Space Mono (Código)</option>
+                                <option value="'Courier New', monospace">Courier New</option>
+                            </optgroup>
+                            <optgroup label="Fuentes Personalizadas" id="settings-custom-fonts-group">
+                                <!-- Uploaded custom fonts injected here -->
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="defaultFontSizeLabel">Tamaño de Letra Predeterminado</label>
+                        <select id="setting-font-size" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="12px">Pequeño (12px)</option>
+                            <option value="14px">Medio-Bajo (14px)</option>
+                            <option value="16px" selected>Normal (16px)</option>
+                            <option value="18px">Grande (18px)</option>
+                            <option value="20px">Muy Grande (20px)</option>
+                            <option value="24px">Título Pequeño (24px)</option>
+                            <option value="28px">Título Mediano (28px)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="accentColorLabel">Color de Acento de la Interfaz</label>
+                        <input type="color" id="setting-accent-color" value="#8b5cf6" style="width:100%; height:38px; cursor:pointer;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Onboarding Tour Elements -->
+    <div id="tour-backdrop" class="tour-backdrop"></div>
+    <div id="tour-popover" class="tour-popover">
+        <div class="tour-header">
+            <span class="tour-step-badge" id="tour-step-badge">Paso 1 de 9</span>
+            <button class="tour-close-btn" id="tour-skip-btn" title="Saltar Tutorial">✕</button>
+        </div>
+        <h4 class="tour-title" id="tour-title">Gestor de Documentos</h4>
+        <p class="tour-desc" id="tour-desc">Abre la barra lateral para crear nuevos manuscritos y organizar todas tus obras.</p>
+        <div class="tour-footer">
+            <button class="tour-btn tour-btn-sec" id="tour-prev-btn">◀ Anterior</button>
+            <button class="tour-btn tour-btn-main" id="tour-next-btn">Siguiente ▶</button>
+        </div>
+    </div>
+
+    <!-- Main JavaScript Standalone App Loader -->
+    <script src="js/lofinotepad.js"></script>
+</body>
+</html>
