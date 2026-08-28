@@ -706,6 +706,14 @@ const Editor = {
             }
         });
 
+        // Instant save listeners on window unload, tab hide, or editor blur
+        window.addEventListener('beforeunload', () => Editor.saveImmediately());
+        window.addEventListener('pagehide', () => Editor.saveImmediately());
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') Editor.saveImmediately();
+        });
+        editorElement.addEventListener('blur', () => Editor.saveImmediately());
+
         const imageInput = document.getElementById('editor-image-input');
         if (imageInput) {
             imageInput.addEventListener('change', (e) => {
@@ -734,7 +742,16 @@ const Editor = {
     loadDocument(doc) {
         currentDocId = doc.id;
         if (editorElement) {
-            editorElement.innerHTML = Sanitizer.clean(doc.content || '');
+            // Check if there is an instant localStorage backup
+            let contentToLoad = doc.content || '';
+            try {
+                const backup = localStorage.getItem('lofinotebook_backup_' + doc.id);
+                if (backup && backup.length > contentToLoad.length) {
+                    contentToLoad = backup;
+                }
+            } catch (e) {}
+
+            editorElement.innerHTML = Sanitizer.clean(contentToLoad);
         }
         Editor.updateMetrics();
     },
@@ -771,13 +788,25 @@ const Editor = {
         toggleBtnState('insertOrderedList', 'btn-ol');
     },
 
-    scheduleAutoSave() {
-        if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
-        autoSaveTimeout = setTimeout(async () => {
-            if (!currentDocId) return;
-            const doc = await Storage.getDocument(currentDocId);
+    saveImmediately() {
+        if (autoSaveTimeout) {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = null;
+        }
+        if (!currentDocId || !editorElement) return;
+
+        const content = editorElement.innerHTML;
+
+        // Instant synchronous localStorage backup (fail-safe for immediate browser exit)
+        try {
+            localStorage.setItem('lofinotebook_active_doc_id', currentDocId);
+            localStorage.setItem('lofinotebook_backup_' + currentDocId, content);
+        } catch (e) {}
+
+        // Save to IndexedDB
+        Storage.getDocument(currentDocId).then(doc => {
             if (doc) {
-                doc.content = editorElement.innerHTML;
+                doc.content = content;
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = doc.content;
                 const text = tempDiv.textContent.trim();
@@ -785,10 +814,26 @@ const Editor = {
                     const firstWords = text.split(/\s+/).slice(0, 5).join(' ');
                     doc.title = firstWords.substring(0, 30);
                 }
-                await Storage.saveDocument(doc);
-                Sidebar.refreshDocumentList();
+                Storage.saveDocument(doc);
             }
-        }, 500);
+        });
+    },
+
+    scheduleAutoSave() {
+        if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
+
+        // Instant synchronous backup on keystroke
+        try {
+            if (currentDocId && editorElement) {
+                localStorage.setItem('lofinotebook_active_doc_id', currentDocId);
+                localStorage.setItem('lofinotebook_backup_' + currentDocId, editorElement.innerHTML);
+            }
+        } catch (e) {}
+
+        autoSaveTimeout = setTimeout(() => {
+            Editor.saveImmediately();
+            Sidebar.refreshDocumentList();
+        }, 400);
     },
 
     updateMetrics() {
