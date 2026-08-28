@@ -1,6 +1,7 @@
 # LofiNotebook v2
 
 > **Tu Espacio de Escritura Ambientado sin backend ni autenticación de usuario** para proyectos grandes de escritura, novelas y manuscritos literarios.
+> lofinotebook.com
 
 
 ## Características Principales
