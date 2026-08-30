@@ -86,21 +86,33 @@
 /* Page Modes */
 .page-sheet.mode-a4 {
     width: 794px;
+    max-width: 794px;
     min-height: 1123px;
     border: 1px solid var(--panel-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+    padding: 60px 65px;
 }
 
 .page-sheet.mode-continuous {
-    width: 100%;
-    min-height: 80vh;
-    border-radius: 12px;
+    width: 92%;
+    max-width: 960px;
+    min-height: calc(100vh - 160px);
+    height: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 50px rgba(0, 0, 0, 0.5);
+    border-radius: 14px;
+    padding: 48px 56px;
 }
 
 .page-sheet.mode-minimal {
+    width: 90%;
+    max-width: 900px;
+    min-height: calc(100vh - 160px);
     background: transparent !important;
     box-shadow: none !important;
     border: none !important;
-    padding: 40px 0;
+    padding: 30px 20px;
 }
 
 /* Placeholder text when empty */
