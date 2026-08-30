@@ -97,6 +97,7 @@ const I18N = {
         supportProjectDesc: "Si LofiNotebook te ayuda en tus proyectos de escritura, puedes apoyar el servidor e inspirar nuevas funciones con una donación voluntaria en Ko-fi.",
         kofiBtnLabel: "☕ Donar en Ko-fi",
         tourSteps: [
+            { title: "📖 ¡Bienvenido a LofiNotebook!", desc: "LofiNotebook es una aplicación 100% Client-Side. Todos tus borradores, fichas, fondos e ideas se guardan de forma permanente y totalmente privada en la memoria local de tu navegador (IndexedDB y localStorage). ¡Nadie más tiene acceso a tus escritos!" },
             { title: "📁 Gestor de Documentos", desc: "Abre la barra lateral para crear nuevos manuscritos, renombrarlos (con doble clic o con el icono de lápiz) y organizar todas tus obras." },
             { title: "✏️ Formato y Tipografía", desc: "Selecciona entre fuentes literarias (Lora, Playfair, Cinzel), cambia el tamaño, color, alineación o aplica negritas y listas a tu texto." },
             { title: "👥 Biblia del Proyecto", desc: "Crea y consulta fichas rápidas para tus personajes, lugares, lore y objetos para tenerlos siempre a mano mientras escribes tu historia." },
@@ -198,6 +199,7 @@ const I18N = {
         supportProjectDesc: "If LofiNotebook helps you with your writing projects, you can support hosting and inspire new features with a voluntary donation on Ko-fi.",
         kofiBtnLabel: "☕ Donate on Ko-fi",
         tourSteps: [
+            { title: "📖 Welcome to LofiNotebook!", desc: "LofiNotebook is a 100% Client-Side application. All your drafts, cards, custom wallpapers, and ideas are saved permanently and privately in your browser's local memory (IndexedDB & localStorage). Your writings stay completely private on your device!" },
             { title: "📁 Document Manager", desc: "Open the sidebar to create new drafts, rename them (double click or pencil icon), and organize your works." },
             { title: "✏️ Formatting & Typography", desc: "Select literary fonts (Lora, Playfair, Cinzel), change text size, colors, alignment, or apply bold and lists." },
             { title: "👥 Project Bible", desc: "Create and consult quick cards for your characters, places, lore, and items to keep them handy while writing." },
@@ -2354,6 +2356,7 @@ const Tour = {
         }
 
         const stepTargets = [
+            '.brand-title',
             'sidebar-toggle-btn',
             'toolbar-font-name',
             'lore-toggle-btn',
