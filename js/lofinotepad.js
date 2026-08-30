@@ -764,6 +764,36 @@ const Editor = {
         Editor.scheduleAutoSave();
     },
 
+    toggleQuote() {
+        if (!editorElement) return;
+        editorElement.focus();
+
+        const sel = window.getSelection();
+        let isInsideQuote = false;
+
+        if (sel && sel.rangeCount > 0) {
+            let node = sel.getRangeAt(0).commonAncestorContainer;
+            while (node && node !== editorElement) {
+                if (node.nodeName === 'BLOCKQUOTE') {
+                    isInsideQuote = true;
+                    break;
+                }
+                node = node.parentNode;
+            }
+        }
+
+        if (isInsideQuote) {
+            // Exit blockquote: revert block back to standard paragraph <p>
+            document.execCommand('formatBlock', false, 'p');
+        } else {
+            // Enter blockquote: turn current or new block into blockquote
+            document.execCommand('formatBlock', false, 'blockquote');
+        }
+
+        Editor.updateToolbarState();
+        Editor.scheduleAutoSave();
+    },
+
     updateToolbarState() {
         const toggleBtnState = (cmd, btnId) => {
             const btn = document.getElementById(btnId);
@@ -786,6 +816,28 @@ const Editor = {
         toggleBtnState('strikeThrough', 'btn-strike');
         toggleBtnState('insertUnorderedList', 'btn-ul');
         toggleBtnState('insertOrderedList', 'btn-ol');
+
+        // Check if cursor is inside BLOCKQUOTE
+        const quoteBtn = document.getElementById('btn-quote');
+        if (quoteBtn) {
+            const sel = window.getSelection();
+            let isInsideQuote = false;
+            if (sel && sel.rangeCount > 0) {
+                let node = sel.getRangeAt(0).commonAncestorContainer;
+                while (node && node !== editorElement) {
+                    if (node.nodeName === 'BLOCKQUOTE') {
+                        isInsideQuote = true;
+                        break;
+                    }
+                    node = node.parentNode;
+                }
+            }
+            if (isInsideQuote) {
+                quoteBtn.classList.add('active');
+            } else {
+                quoteBtn.classList.remove('active');
+            }
+        }
     },
 
     saveImmediately() {
@@ -2433,8 +2485,7 @@ function bindToolbarEvents() {
         { id: 'btn-align-left', cmd: 'justifyLeft' },
         { id: 'btn-align-center', cmd: 'justifyCenter' },
         { id: 'btn-align-right', cmd: 'justifyRight' },
-        { id: 'btn-align-justify', cmd: 'justifyFull' },
-        { id: 'btn-quote', cmd: 'formatBlock', value: 'blockquote' }
+        { id: 'btn-align-justify', cmd: 'justifyFull' }
     ];
 
     formatButtons.forEach(({ id, cmd, value }) => {
@@ -2445,6 +2496,13 @@ function bindToolbarEvents() {
             });
         }
     });
+
+    const quoteBtn = document.getElementById('btn-quote');
+    if (quoteBtn) {
+        quoteBtn.addEventListener('click', () => {
+            Editor.toggleQuote();
+        });
+    }
 
     const fontSelect = document.getElementById('toolbar-font-name');
     if (fontSelect) {
