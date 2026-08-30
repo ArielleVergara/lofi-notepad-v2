@@ -85,6 +85,14 @@ const I18N = {
         bgBlurLabel: "Desenfoque del Fondo (Blur)",
         bgOverlayLabel: "Filtro de Oscuridad (Overlay Opacity)",
         sheetStyleLabel: "Estilo de Hoja / Lienzo",
+        pageSizeLabel: "Tamaño / Tipo de Hoja",
+        sizeA4: "📄 A4 Estándar (794 x 1123 px)",
+        sizeLetter: "📄 Carta / Letter (816 x 1056 px)",
+        sizeLegal: "📄 Oficio / Legal (816 x 1344 px)",
+        sizePoem: "📜 Poema / Poesía (Estrecho 540 px)",
+        pageFlowLabel: "Comportamiento del Lienzo",
+        flowContinuous: "📜 Hoja Continua (Se alarga dinámicamente al escribir)",
+        flowStatic: "📌 Hoja Estática (Página fija con límite rígido)",
         paperBgLabel: "Color de Fondo del Papel",
         spellcheckLabel: "Corrector Ortográfico del Navegador",
         spellcheckOn: "Activado (Resalta faltas ortográficas)",
@@ -187,6 +195,14 @@ const I18N = {
         bgBlurLabel: "Background Blur",
         bgOverlayLabel: "Darkness Filter (Overlay Opacity)",
         sheetStyleLabel: "Sheet / Canvas Style",
+        pageSizeLabel: "Paper Size / Preset",
+        sizeA4: "📄 Standard A4 (794 x 1123 px)",
+        sizeLetter: "📄 Letter Size (816 x 1056 px)",
+        sizeLegal: "📄 Legal Size (816 x 1344 px)",
+        sizePoem: "📜 Poem / Poetry (Narrow 540 px)",
+        pageFlowLabel: "Canvas Flow Mode",
+        flowContinuous: "📜 Continuous Sheet (Expands dynamically as you write)",
+        flowStatic: "📌 Static Sheet (Fixed page with strict bounds)",
         paperBgLabel: "Paper Background Color",
         spellcheckLabel: "Browser Spell Checker",
         spellcheckOn: "Enabled (Highlights spelling mistakes)",
@@ -406,6 +422,8 @@ const Storage = {
                     bgBlur: 6,
                     bgOverlayOpacity: 0.55,
                     pageMode: 'mode-a4',
+                    pageSize: 'size-a4',
+                    pageFlow: 'flow-continuous',
                     paperBg: '#1e293b',
                     paperTextColor: '#f1f5f9',
                     fontFamily: "'Inter', sans-serif",
@@ -1610,11 +1628,20 @@ const Settings = {
             });
         }
 
-        const pageModeSelect = document.getElementById('setting-page-mode');
-        if (pageModeSelect) {
-            pageModeSelect.value = currentSettings.pageMode;
-            pageModeSelect.addEventListener('change', (e) => {
-                currentSettings.pageMode = e.target.value;
+        const pageSizeSelect = document.getElementById('setting-page-size');
+        if (pageSizeSelect) {
+            pageSizeSelect.value = currentSettings.pageSize || 'size-a4';
+            pageSizeSelect.addEventListener('change', (e) => {
+                currentSettings.pageSize = e.target.value;
+                Settings.saveAndApply();
+            });
+        }
+
+        const pageFlowSelect = document.getElementById('setting-page-flow');
+        if (pageFlowSelect) {
+            pageFlowSelect.value = currentSettings.pageFlow || 'flow-continuous';
+            pageFlowSelect.addEventListener('change', (e) => {
+                currentSettings.pageFlow = e.target.value;
                 Settings.saveAndApply();
             });
         }
@@ -1692,7 +1719,9 @@ const Settings = {
 
         const pageSheet = document.getElementById('editor');
         if (pageSheet) {
-            pageSheet.className = `page-sheet ${s.pageMode}`;
+            const pageSize = s.pageSize || 'size-a4';
+            const pageFlow = s.pageFlow || 'flow-continuous';
+            pageSheet.className = `page-sheet ${pageSize} ${pageFlow}`;
         }
 
         // Apply Spellcheck State

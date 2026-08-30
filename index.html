@@ -441,11 +441,20 @@
                 <!-- Tab 2: Sheet & Format -->
                 <div class="tab-content" id="tab-sheet">
                     <div class="setting-group">
-                        <label data-i18n="sheetStyleLabel">Estilo de Hoja / Lienzo</label>
-                        <select id="setting-page-mode" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
-                            <option value="mode-a4">Página A4 Tradicional (con bordes)</option>
-                            <option value="mode-continuous">Manuscrito Continuo</option>
-                            <option value="mode-minimal">Minimalista Transparente (sin lienzo)</option>
+                        <label data-i18n="pageSizeLabel">Tamaño / Tipo de Hoja</label>
+                        <select id="setting-page-size" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="size-a4" data-i18n="sizeA4">📄 A4 Estándar (794 x 1123 px)</option>
+                            <option value="size-letter" data-i18n="sizeLetter">📄 Carta / Letter (816 x 1056 px)</option>
+                            <option value="size-legal" data-i18n="sizeLegal">📄 Oficio / Legal (816 x 1344 px)</option>
+                            <option value="size-poem" data-i18n="sizePoem">📜 Poema / Poesía (Estrecho 540 px)</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label data-i18n="pageFlowLabel">Comportamiento del Lienzo</label>
+                        <select id="setting-page-flow" style="width:100%; padding:8px; border-radius:6px; background:#0f172a; color:white; border:1px solid var(--panel-border);">
+                            <option value="flow-continuous" data-i18n="flowContinuous">📜 Hoja Continua (Se alarga dinámicamente al escribir)</option>
+                            <option value="flow-static" data-i18n="flowStatic">📌 Hoja Estática (Página fija con límite rígido)</option>
                         </select>
                     </div>
 
