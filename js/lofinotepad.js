@@ -43,11 +43,10 @@ const I18N = {
         wordsLabel: "Palabras",
         charsLabel: "Caracteres",
         downloadBtn: "Descargar",
-        exportWord: "📘 Documento Word (.doc)",
-        exportTxt: "📄 Texto plano (.txt)",
-        exportMd: "📝 Markdown (.md)",
-        exportHtml: "🌐 Página Web (.html)",
-        exportPdf: "🖨️ Documento PDF / Imprimir",
+        exportWord: "Documento Word (.docx)",
+        exportTxt: "Texto plano (.txt)",
+        exportMd: "Markdown (.md)",
+        exportPdf: "Documento PDF / Imprimir",
         playAudio: "▶ Reproducir Audio",
         pauseAudio: "⏸ Pausar Audio",
         rainLabel: "🌧️ Lluvia suave",
@@ -153,11 +152,10 @@ const I18N = {
         wordsLabel: "Words",
         charsLabel: "Characters",
         downloadBtn: "Download",
-        exportWord: "📘 Word Document (.doc)",
-        exportTxt: "📄 Plain Text (.txt)",
-        exportMd: "📝 Markdown (.md)",
-        exportHtml: "🌐 Web Page (.html)",
-        exportPdf: "🖨️ PDF Document / Print",
+        exportWord: "Word Document (.docx)",
+        exportTxt: "Plain Text (.txt)",
+        exportMd: "Markdown (.md)",
+        exportPdf: "PDF Document / Print",
         playAudio: "▶ Play Audio",
         pauseAudio: "⏸ Pause Audio",
         rainLabel: "🌧️ Soft Rain",
@@ -1802,7 +1800,6 @@ const Export = {
         const docBtn = document.getElementById('export-doc-btn');
         const txtBtn = document.getElementById('export-txt-btn');
         const mdBtn = document.getElementById('export-md-btn');
-        const htmlBtn = document.getElementById('export-html-btn');
         const pdfBtn = document.getElementById('export-pdf-btn');
 
         if (dropdownBtn && dropdownMenu) {
@@ -1821,7 +1818,6 @@ const Export = {
         if (docBtn) docBtn.addEventListener('click', () => { Export.exportDoc(); dropdownMenu.classList.remove('open'); });
         if (txtBtn) txtBtn.addEventListener('click', () => { Export.exportTxt(); dropdownMenu.classList.remove('open'); });
         if (mdBtn) mdBtn.addEventListener('click', () => { Export.exportMarkdown(); dropdownMenu.classList.remove('open'); });
-        if (htmlBtn) htmlBtn.addEventListener('click', () => { Export.exportHtml(); dropdownMenu.classList.remove('open'); });
         if (pdfBtn) pdfBtn.addEventListener('click', () => { Export.exportPdf(); dropdownMenu.classList.remove('open'); });
     },
 
@@ -1858,7 +1854,7 @@ const Export = {
         </body>
         </html>`;
 
-        Export.downloadFile(wordDocument, 'manuscript.doc', 'application/msword');
+        Export.downloadFile(wordDocument, 'manuscript.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     },
 
     exportTxt() {
