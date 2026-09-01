@@ -110,24 +110,39 @@ header {
     color: var(--primary-accent);
 }
 
+.header-icon-img {
+    height: 18px;
+    width: auto;
+    max-width: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+    display: inline-block;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.icon-btn:hover .header-icon-img {
+    transform: scale(1.1);
+}
+
 .lang-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--panel-border);
+    background: transparent;
+    border: none;
     color: var(--text-main);
-    padding: 4px 10px;
-    border-radius: 6px;
+    padding: 0 8px;
+    height: 36px;
+    border-radius: 8px;
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .lang-btn:hover {
-    background: rgba(var(--primary-accent-rgb), 0.25);
-    border-color: var(--primary-accent);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary-accent-hover);
 }
 
 /* Main Workspace Split (Sidebar + Editor Area) */

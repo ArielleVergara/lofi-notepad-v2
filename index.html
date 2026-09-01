@@ -51,7 +51,7 @@
 
     <!-- Exit Zen Mode Button -->
     <button class="icon-btn" id="zen-exit-btn" data-i18n-title="zenTooltip" title="Salir del Modo Enfoque (Esc)">
-        👁️
+        <img src="static/img/icon-zen.png" alt="Zen" class="header-icon-img">
     </button>
 
     <!-- App Main Container -->
@@ -61,7 +61,7 @@
         <header>
             <div class="brand-section">
                 <button class="icon-btn" id="sidebar-toggle-btn" data-i18n-title="toggleSidebar" title="Mostrar/Ocultar Documentos">
-                    📁
+                    <img src="static/img/icon-sidebar.png" alt="Sidebar" class="header-icon-img">
                 </button>
                 <span class="brand-title">
                     <img src="static/img/logo-arienproceso-round.png" alt="LofiNotebook Logo" style="height: 28px; width: 28px; object-fit: cover; vertical-align: middle; border-radius: 50%; margin-right: 0px;">
@@ -153,22 +153,22 @@
             <!-- Action Controls (Tight 4px gap for clean aesthetic spacing) -->
             <div class="brand-section" style="gap: 4px;">
                 <button class="icon-btn" id="lore-toggle-btn" data-i18n-title="loreTooltip" title="Fichas de Personajes y Lore">
-                    👥
+                    <img src="static/img/icon-lore.png" alt="Lore" class="header-icon-img">
                 </button>
                 <button class="icon-btn" id="outline-toggle-btn" data-i18n-title="outlineTooltip" title="Esquema por Capítulos">
-                    📜
+                    <img src="static/img/icon-outline.png" alt="Esquema" class="header-icon-img">
                 </button>
                 <button class="icon-btn" id="pomodoro-toggle-btn" data-i18n-title="pomoTooltip" title="Temporizador Pomodoro" style="width: auto; padding: 0 8px;">
-                    ⏱️ <span id="pomo-header-badge" style="font-size:0.68rem; margin-left:3px; font-weight:600;">25:00</span>
+                    <img src="static/img/icon-pomodoro.png" alt="Pomodoro" class="header-icon-img" style="height:16px; width:auto; vertical-align:middle; margin-right:3px;"> <span id="pomo-header-badge" style="font-size:0.68rem; margin-left:3px; font-weight:600;">25:00</span>
                 </button>
                 <button class="icon-btn" id="add-postit-btn" data-i18n-title="postitTooltip" title="Notas Post-it">
-                    📌
+                    <img src="static/img/icon-postit.png" alt="Post-it" class="header-icon-img">
                 </button>
                 <button class="icon-btn" id="audio-toggle-btn" data-i18n-title="audioTooltip" title="Sonido Ambiental Lo-Fi">
-                    🎧
+                    <img src="static/img/icon-audio.png" alt="Audio" class="header-icon-img">
                 </button>
                 <button class="icon-btn" id="zen-mode-toggle-btn" data-i18n-title="zenTooltip" title="Modo Enfoque / Zen (Ctrl+Shift+F)">
-                    👁️
+                    <img src="static/img/icon-zen.png" alt="Zen" class="header-icon-img">
                 </button>
 
                 <div class="toolbar-divider" style="margin: 0 2px;"></div>
@@ -194,7 +194,9 @@
             <aside id="sidebar-panel">
                 <div class="sidebar-header">
                     <h3 data-i18n="myDocs">Mis Documentos</h3>
-                    <button class="icon-btn" id="new-doc-btn" data-i18n-title="newDocument" title="Crear Nuevo Documento">➕</button>
+                    <button class="icon-btn" id="new-doc-btn" data-i18n-title="newDocument" title="Crear Nuevo Documento">
+                        <img src="static/img/icon-plus.png" alt="Nuevo" style="height: 14px; width: auto; vertical-align: middle;">
+                    </button>
                 </div>
                 <div class="sidebar-search">
                     <input type="text" id="sidebar-search-input" data-i18n-placeholder="searchDocs" placeholder="Buscar notas...">
@@ -214,7 +216,7 @@
         <!-- Bottom Status Bar -->
         <footer id="status-bar">
             <div class="status-group">
-                <span id="save-status" data-i18n="savedStatus">💾 Guardado local</span>
+                <span id="save-status"><img src="static/img/icon-save.png" alt="Guardado" style="height: 14px; width: auto; vertical-align: middle; margin-right: 3px;"> <span data-i18n="savedStatus">Guardado local</span></span>
                 <span>•</span>
                 <span><span data-i18n="wordsLabel">Palabras</span>: <strong id="word-count-val">0</strong></span>
                 <span>•</span>
@@ -240,7 +242,7 @@
             <div class="status-group">
                 <div class="export-dropdown-wrapper" style="position:relative;">
                     <button class="icon-btn export-menu-btn" id="export-dropdown-btn" data-i18n-title="downloadBtn" title="Opciones de Descarga" style="width:auto; padding:0 12px; height:28px; font-size:0.8rem; background:rgba(255,255,255,0.08); border:1px solid var(--panel-border);">
-                        <span data-i18n="downloadBtn">📥 Descargar</span> <span style="font-size:0.65rem; margin-left:4px;">▼</span>
+                        <img src="static/img/icon-download.png" alt="Descargar" style="height: 14px; width: auto; vertical-align: middle; margin-right: 3px;"> <span data-i18n="downloadBtn">Descargar</span> <span style="font-size:0.65rem; margin-left:4px;">▼</span>
                     </button>
                     <div class="export-dropdown-menu" id="export-dropdown-menu">
                         <button class="dropdown-item" id="export-doc-btn" data-i18n="exportWord">📘 Documento Word (.doc)</button>
@@ -375,7 +377,7 @@
             <div class="modal-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <h3 style="font-size:1.1rem; color:var(--primary-accent);" data-i18n="settingsTitle">⚙️ Personalización</h3>
-                    <button id="replay-tour-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted); padding:3px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;" data-i18n="helpTourBtn" title="Ver tutorial paso a paso">❓ Ver Tour de Ayuda</button>
+                    <button id="replay-tour-btn" style="background:transparent; border:1px solid var(--panel-border); color:var(--text-muted); padding:3px 8px; border-radius:6px; font-size:0.75rem; cursor:pointer;" title="Ver tutorial paso a paso"><img src="static/img/icon-help.png" alt="Ayuda" style="height: 14px; width: auto; vertical-align: middle; margin-right: 3px;"> <span data-i18n="helpTourBtn">Ver Tour de Ayuda</span></button>
                 </div>
                 <button class="icon-btn" id="close-settings-btn">✕</button>
             </div>
