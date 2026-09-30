@@ -65,6 +65,13 @@ export const Postits = {
                     <span class="postit-color-dot" data-color="purple" style="background:#e9d5ff;"></span>
                 </div>
                 <div class="postit-btn-group">
+                    <select class="postit-fontsize-select" title="Tamaño de letra">
+                        <option value="12px" ${data.fontSize === '12px' ? 'selected' : ''}>12px</option>
+                        <option value="14px" ${data.fontSize === '14px' ? 'selected' : ''}>14px</option>
+                        <option value="15px" ${(!data.fontSize || data.fontSize === '15px') ? 'selected' : ''}>15px</option>
+                        <option value="16px" ${data.fontSize === '16px' ? 'selected' : ''}>16px</option>
+                        <option value="18px" ${data.fontSize === '18px' ? 'selected' : ''}>18px</option>
+                    </select>
                     <button class="bullet-postit-btn" title="Agregar Viñeta (•)">•</button>
                     <button class="minimize-postit-btn" title="Minimizar / Expandir">${data.minimized ? '➕' : '➖'}</button>
                     <button class="delete-postit-btn" title="Eliminar Nota">🗑️</button>
@@ -167,8 +174,23 @@ export const Postits = {
             }
         });
 
-        // Text Autosave & Keydown Auto-Bullet
+        // Font Size Selector Handler & Initial Apply
         const textarea = el.querySelector('.postit-textarea');
+        if (data.fontSize) {
+            textarea.style.fontSize = data.fontSize;
+        }
+
+        const sizeSelect = el.querySelector('.postit-fontsize-select');
+        if (sizeSelect) {
+            sizeSelect.addEventListener('change', (e) => {
+                e.stopPropagation();
+                const newSize = e.target.value;
+                textarea.style.fontSize = newSize;
+                data.fontSize = newSize;
+                Storage.savePostit(data);
+            });
+        }
+
         let textSaveTimeout = null;
 
         textarea.addEventListener('keydown', (e) => {

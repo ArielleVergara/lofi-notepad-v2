@@ -181,6 +181,23 @@
     color: #0c0a09;
 }
 
+.postit-fontsize-select {
+    background: rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    font-size: 0.68rem;
+    padding: 0 2px;
+    height: 20px;
+    border-radius: 3px;
+    color: #292524;
+    cursor: pointer;
+    outline: none;
+    margin-right: 2px;
+}
+
+.postit-fontsize-select:hover {
+    background: rgba(0, 0, 0, 0.14);
+}
+
 .postit-body {
     flex: 1;
     padding: 8px;
