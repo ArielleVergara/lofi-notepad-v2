@@ -196,9 +196,10 @@
     outline: none;
     resize: none;
     font-family: 'Caveat', cursive, sans-serif;
-    font-size: 1.15rem;
+    font-size: 15px;
+    font-style: normal;
     color: inherit;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
 /* Muted Lo-Fi Colors */

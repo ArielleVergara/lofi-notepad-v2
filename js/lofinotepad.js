@@ -991,12 +991,13 @@ const Postits = {
                     <span class="postit-color-dot" data-color="purple" style="background:#bfa4c9;"></span>
                 </div>
                 <div class="postit-btn-group">
+                    <button class="bullet-postit-btn" title="Agregar Viñeta (•)">•</button>
                     <button class="minimize-postit-btn" title="Minimizar / Expandir">${data.minimized ? '➕' : '➖'}</button>
                     <button class="delete-postit-btn" title="Eliminar Nota">🗑️</button>
                 </div>
             </div>
             <div class="postit-body">
-                <textarea class="postit-textarea" placeholder="...">${data.text || ''}</textarea>
+                <textarea class="postit-textarea" placeholder="• Escribe tu lista o notas aquí...">${data.text || ''}</textarea>
             </div>
         `;
 
@@ -1009,6 +1010,66 @@ const Postits = {
                 Storage.savePostit(data);
             });
         });
+
+        const bulletBtn = el.querySelector('.bullet-postit-btn');
+        if (bulletBtn) {
+            bulletBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const val = textarea.value;
+
+                if (start !== end) {
+                    // Selection active: Toggle bullets for all selected lines
+                    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+                    let lineEnd = val.indexOf('\n', end);
+                    if (lineEnd === -1) lineEnd = val.length;
+
+                    const selectedBlock = val.substring(lineStart, lineEnd);
+                    const lines = selectedBlock.split('\n');
+                    const allBulleted = lines.every(l => l.trim() === '' || l.startsWith('• '));
+
+                    let newLines;
+                    if (allBulleted) {
+                        newLines = lines.map(l => l.startsWith('• ') ? l.substring(2) : l);
+                    } else {
+                        newLines = lines.map(l => (l.startsWith('• ') || l.trim() === '') ? l : '• ' + l);
+                    }
+
+                    const newBlock = newLines.join('\n');
+                    textarea.value = val.substring(0, lineStart) + newBlock + val.substring(lineEnd);
+                    textarea.selectionStart = lineStart;
+                    textarea.selectionEnd = lineStart + newBlock.length;
+                } else {
+                    // Cursor placement (no selection)
+                    const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+                    let lineEnd = val.indexOf('\n', start);
+                    if (lineEnd === -1) lineEnd = val.length;
+
+                    const line = val.substring(lineStart, lineEnd);
+
+                    if (line.startsWith('• ')) {
+                        // Current line already has a bullet: insert next bullet on a new line below
+                        const newInsertion = '\n• ';
+                        textarea.value = val.substring(0, lineEnd) + newInsertion + val.substring(lineEnd);
+                        const newPos = lineEnd + newInsertion.length;
+                        textarea.selectionStart = textarea.selectionEnd = newPos;
+                    } else if (line.trim() === '') {
+                        // Empty line: add bullet
+                        textarea.value = val.substring(0, lineStart) + '• ' + val.substring(lineEnd);
+                        textarea.selectionStart = textarea.selectionEnd = lineStart + 2;
+                    } else {
+                        // Plain text line: convert line to bullet
+                        textarea.value = val.substring(0, lineStart) + '• ' + line + val.substring(lineEnd);
+                        textarea.selectionStart = textarea.selectionEnd = start + 2;
+                    }
+                }
+
+                textarea.focus();
+                data.text = textarea.value;
+                Storage.savePostit(data);
+            });
+        }
 
         const minBtn = el.querySelector('.minimize-postit-btn');
         minBtn.addEventListener('click', (e) => {
@@ -1032,6 +1093,32 @@ const Postits = {
 
         const textarea = el.querySelector('.postit-textarea');
         let textSaveTimeout = null;
+
+        textarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const val = textarea.value;
+                const lineStart = val.lastIndexOf('\n', start - 1) + 1;
+                const line = val.substring(lineStart, start);
+
+                if (line.trim() === '•') {
+                    e.preventDefault();
+                    textarea.value = val.substring(0, lineStart) + val.substring(start);
+                    textarea.selectionStart = textarea.selectionEnd = lineStart;
+                    data.text = textarea.value;
+                    Storage.savePostit(data);
+                } else if (line.startsWith('• ')) {
+                    e.preventDefault();
+                    const insertion = '\n• ';
+                    textarea.value = val.substring(0, start) + insertion + val.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + insertion.length;
+                    data.text = textarea.value;
+                    Storage.savePostit(data);
+                }
+            }
+        });
+
         textarea.addEventListener('input', () => {
             if (textSaveTimeout) clearTimeout(textSaveTimeout);
             textSaveTimeout = setTimeout(() => {
